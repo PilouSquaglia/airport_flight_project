@@ -194,5 +194,9 @@ class Utils private constructor() {
                 } else duration.append(minute).append("min").toString()
             }
         }
+        fun formatCalendarDate(calendar: Calendar): String {
+            val dateFormat = SimpleDateFormat("dd/MM/yyyy")
+            return dateFormat.format(calendar.time)
+        }
     }
 }
