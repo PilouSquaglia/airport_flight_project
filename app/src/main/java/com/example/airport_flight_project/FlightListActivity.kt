@@ -16,12 +16,17 @@ class FlightListActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this).get(FlightViewModel::class.java)
 
-        val jsonTextView = findViewById<TextView>(R.id.jsonTextView)
-
         // Récupérez le JSON transmis depuis l'activité précédente
         val jsonContent = readJsonFromAssets(this, "mock.json")
 
-        // Affichez le JSON dans le TextView
-        jsonTextView.text = jsonContent
+        // Mettez à jour le modèle avec le contenu JSON
+        viewModel.updateJsonContent(jsonContent)
+
+        val jsonTextView = findViewById<TextView>(R.id.jsonTextView)
+
+        // Affichez le JSON depuis le modèle dans le TextView
+        viewModel.jsonContent.observe(this, { json ->
+            jsonTextView.text = json
+        })
     }
 }
