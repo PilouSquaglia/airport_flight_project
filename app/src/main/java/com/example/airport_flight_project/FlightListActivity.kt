@@ -1,6 +1,7 @@
 package com.example.airport_flight_project
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -25,8 +26,12 @@ class FlightListActivity : AppCompatActivity() {
         val jsonTextView = findViewById<TextView>(R.id.jsonTextView)
 
         // Affichez le JSON depuis le modèle dans le TextView
-        viewModel.jsonContent.observe(this, { json ->
-            jsonTextView.text = json
+        viewModel.jsonContent.observe(this, { flightList ->
+            flightList.forEach { flightModel ->
+                Log.e(TAG, flightModel.callsign)
+                jsonTextView.append(flightModel.callsign + "\n")
+            }
         })
+
     }
 }
