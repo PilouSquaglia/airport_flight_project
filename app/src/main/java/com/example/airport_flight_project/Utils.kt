@@ -198,5 +198,12 @@ class Utils private constructor() {
             val dateFormat = SimpleDateFormat("dd/MM/yyyy")
             return dateFormat.format(calendar.time)
         }
+
+        fun readJsonFromAssets(context: Context, fileName: String): String {
+            val assetManager = context.assets
+            return assetManager.open(fileName).bufferedReader().use {
+                it.readText()
+            }
+        }
     }
 }

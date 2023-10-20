@@ -1,7 +1,9 @@
 package com.example.airport_flight_project
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
@@ -10,6 +12,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import kotlinx.coroutines.runBlocking
 import java.util.Calendar
 
 
@@ -40,8 +43,37 @@ class MainActivity : AppCompatActivity() {
         val searchButton = findViewById<Button>(R.id.button)
         val airportSwitch = findViewById<Switch>(R.id.airport_switch)
         searchButton.setOnClickListener{
-            viewModel.requestFlightList(airportSwitch.isChecked, spinner.selectedItemPosition)
+            val request = viewModel.requestFlightList(airportSwitch.isChecked, spinner.selectedItemPosition)
+            // Effectuez la requête pour obtenir le JSON, par exemple avec Retrofit ou Volley
+            val jsonResult = request.toString()
+            Log.i("res", jsonResult)
+            // Créez une intention pour ouvrir la nouvelle activité
+            val intent = Intent(this, FlightListActivity::class.java)
+            intent.putExtra("json_data", jsonResult)
+            startActivity(intent)
         }
+//        val searchButton = findViewById<Button>(R.id.button)
+//        val airportSwitch = findViewById<Switch>(R.id.airport_switch)
+//        searchButton.setOnClickListener {
+//            runBlocking {
+//                val request = viewModel.requestFlightList(airportSwitch.isChecked, spinner.selectedItemPosition)
+//                if (request != null) {
+//                    val jsonResult = request.toString()
+//                    Log.i("res", jsonResult)
+//                    // Créez une intention pour ouvrir la nouvelle activité
+//                    val intent = Intent(this@MainActivity, FlightListActivity::class.java)
+//                    intent.putExtra("json_data", jsonResult)
+//                    startActivity(intent)
+//                } else {
+//                    // Gérer le cas où la requête a échoué
+//                    // Afficher un message d'erreur ou prendre d'autres mesures appropriées
+//                }
+//            }
+//        }
+
+
+
+
 
         viewModel.getBeginDateLiveData().observe(this, Observer { calendar ->
             fromDateTextView.text = Utils.formatCalendarDate(calendar)
