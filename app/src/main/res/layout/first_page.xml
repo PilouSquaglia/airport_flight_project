@@ -110,7 +110,7 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/rectangle_shape"
         android:padding="8dp"
-        android:text="12/10/2022"
+        android:hint="Sélectionnez la date"
         app:layout_constraintEnd_toEndOf="@+id/from_label"
         app:layout_constraintStart_toStartOf="@+id/from_label"
         app:layout_constraintTop_toBottomOf="@+id/from_label" />
@@ -121,7 +121,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/rectangle_shape"
         android:padding="8dp"
-        android:text="13/10/2022"
+        android:hint="Sélectionnez la date"
         app:layout_constraintBottom_toBottomOf="@+id/from_date"
         app:layout_constraintEnd_toEndOf="@+id/to_label"
         app:layout_constraintStart_toStartOf="@+id/to_label"
