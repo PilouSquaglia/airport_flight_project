@@ -1,8 +1,8 @@
 package com.example.airport_flight_project
 
-import android.content.ClipData
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,12 +11,12 @@ import com.example.airport_flight_project.Utils.Companion.readJsonFromAssets
 
 class FlightListActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: FlightViewModel
+    //private lateinit var viewModel: FlightViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.flight_list_view)
-
+/*
         viewModel = ViewModelProvider(this).get(FlightViewModel::class.java)
 
         // Récupérez le JSON transmis depuis l'activité précédente
@@ -43,5 +43,12 @@ class FlightListActivity : AppCompatActivity() {
             adapter.updateFlights(flightList)
 
         })
+*/
+        val transaction = supportFragmentManager.beginTransaction()
+        val fragment = ListOfFlightsFragment()
+        transaction.replace(R.id.fragmentContainerView, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+
     }
 }
