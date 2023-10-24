@@ -8,7 +8,6 @@ import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
 
-
 class FlightViewModel : ViewModel() {
     // LiveData pour stocker le contenu JSON
     private val _jsonContent = MutableLiveData<List<FlightModel>>()
@@ -19,6 +18,7 @@ class FlightViewModel : ViewModel() {
     fun updateJsonContent(content: String) {
         val gson = Gson()
         try {
+
             val flightInfo: List<FlightModel> = gson.fromJson(content, object : TypeToken<List<FlightModel>>() {}.type)
 
             _jsonContent.value = flightInfo
@@ -26,6 +26,4 @@ class FlightViewModel : ViewModel() {
             Log.e("FlightViewModel", "Erreur lors de la désérialisation du JSON", e)
         }
     }
-
-
 }
