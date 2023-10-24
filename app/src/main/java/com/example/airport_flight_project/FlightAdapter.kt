@@ -29,6 +29,8 @@ class FlightAdapter(private var flights: List<FlightModel>) : RecyclerView.Adapt
             timeToTravel = view.findViewById(R.id.time_travel_cell_flight)
             arrivedDate = view.findViewById(R.id.arrived_date_cell_flight)
             arrivedAirport = view.findViewById(R.id.arrived_airport_cell_flight)
+
+
         }
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FlightViewHolder {
