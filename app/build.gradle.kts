@@ -39,6 +39,11 @@ dependencies {
 
     implementation ("com.google.code.gson:gson:2.8.6")
 
+    //map
+    implementation ("org.osmdroid:osmdroid-android:6.0.2")
+
+    // implementation ("org.osmdroid:osmdroid-bonuspack:6.6.0")
+
     implementation("androidx.fragment:fragment-ktx:1.6.1")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
@@ -50,7 +55,5 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-
-
 
 }

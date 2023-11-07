@@ -1,19 +1,17 @@
 package com.example.airport_flight_project
 
-import android.annotation.SuppressLint
-import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import java.text.SimpleDateFormat
 import java.util.Date
-import kotlin.math.log
 
-class FlightAdapter(private var flights: List<FlightModel>) : RecyclerView.Adapter<FlightAdapter.FlightViewHolder>() {
+interface OnFlightClickListener {
+    fun onFlightClick(flight: FlightModel)
+}
+class FlightAdapter(private var flights: List<FlightModel>, private val listener: OnFlightClickListener) : RecyclerView.Adapter<FlightAdapter.FlightViewHolder>() {
 
     class FlightViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val departureDate: TextView
@@ -61,13 +59,10 @@ class FlightAdapter(private var flights: List<FlightModel>) : RecyclerView.Adapt
         holder.timeToTravel.text = time
         holder.arrivedDate.text = formattedDateArrived
         holder.arrivedAirport.text = flight.estArrivalAirport
-//
-//        holder.itemView.setOnClickListener(){
-//            val intent = Intent(holder.itemView.context, FlightDetail::class.java)
-//            intent.putExtra("flight", flight)
-//            startActivity(intent)
-//
-//        }
+
+        holder.itemView.setOnClickListener(){
+            listener.onFlightClick(flight)
+        }
     }
 
     override fun getItemCount(): Int {

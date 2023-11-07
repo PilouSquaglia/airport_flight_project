@@ -1,17 +1,22 @@
 package com.example.airport_flight_project
 
+import android.content.Context
 import android.util.Log
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.airport_flight_project.Utils.Companion.readJsonFromAssets
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.FileReader
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class MainViewModel : ViewModel() {
@@ -22,6 +27,7 @@ class MainViewModel : ViewModel() {
     private val airportListLiveData = MutableLiveData<List<Airport>>()
     private val airportListNamesLiveData = MutableLiveData<List<String>>()
 
+    private val flightListLiveData = MutableLiveData<Array<FlightModel>>()
     init{
         val airportList = Utils.generateAirportList()
         airportListLiveData.value = airportList
@@ -57,42 +63,51 @@ class MainViewModel : ViewModel() {
         return airportListLiveData
     }
 
-
-
-    fun requestFlightList(isArrival: Boolean, selectedAirportIndex: Int){
+     fun requestFlightList(isArrival: Boolean, selectedAirportIndex: Int, context: Context){
         viewModelScope.launch {
-            val result = withContext(Dispatchers.IO){
+            withContext(Dispatchers.IO) {
                 //TODO faire requête
-                val url = if(isArrival) RequestManager.FLIGHT_ARRIVAL_ENDPOINT else RequestManager.FLIGHT_DEPARTURE_ENDPOINT
+                val url =
+                    if (isArrival) RequestManager.FLIGHT_ARRIVAL_ENDPOINT else RequestManager.FLIGHT_DEPARTURE_ENDPOINT
                 val params = HashMap<String, String>().apply {
-                    put("airport",airportListLiveData.value!![selectedAirportIndex].icao)
+                    put("airport", airportListLiveData.value!![selectedAirportIndex].icao)
                     put("begin", (beginDateLiveData.value!!.timeInMillis / 1000).toString())
                     put("end", (endDateLiveData.value!!.timeInMillis / 1000).toString())
                 }
-                RequestManager.getSuspended(url, params)
-            }
-            if (result != null) {
-                Log.i("REQUEST", result)
+                val result = RequestManager.getSuspended(url, params)
 
-                val flightList = ArrayList<FlightModel>()
-                val parser = JsonParser()
-                val jsonElement = parser.parse(result)
+                if (result != null) {
+                    Log.i("REQUEST", result)
 
-                for (flightObject in jsonElement.asJsonArray) {
-                    flightList.add(Gson().fromJson(flightObject.asJsonObject, FlightModel::class.java))
+                    val flightList = ArrayList<FlightModel>()
+                    val parser = JsonParser()
+                    val jsonElement = parser.parse(result)
+
+                    /*for (flightObject in jsonElement.asJsonArray) {
+                        flightList.add(
+                            Gson().fromJson(
+                                flightObject.asJsonObject,
+                                FlightModel::class.java
+                            )
+                        )
+                    }*/
+                    val data: Array<FlightModel> =
+                        Gson().fromJson(jsonElement, Array<FlightModel>::class.java)
+                    flightListLiveData.postValue(data)
+                    // setFlightListLiveData(flightList)
+                    // Equivalent à
+                    // flightListLiveData.value = flightList
+                    Log.i("Res", result)
+
+                } else {
+                    Log.e("REQUEST", "ERROR NO RESULT")
+                    val jsonFile = Utils.readJsonFromAssets(context = context, "mock.json")
+                    //val reader = FileReader(jsonFile)
+
+                    val data: Array<FlightModel> =
+                        Gson().fromJson(jsonFile, Array<FlightModel>::class.java)
+                    flightListLiveData.postValue(data)
                 }
-
-                //setFlightListLiveData(flightList)
-                // Equivalent à
-                //flightListLiveData.value =  flightList
-                Log.i("Res", result)
-
-            } else {
-                Log.e("REQUEST", "ERROR NO RESULT")
-            }
-
-            result?.let{
-                Log.i("Result", result)
             }
         }
     }

@@ -25,31 +25,40 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.first_page)
-        val airportList = Utils.generateAirportList()
+
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
         fromDateTextView = findViewById(R.id.from_date)
         toDateTextView = findViewById(R.id.to_date)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-
+        val airportListLiveData = viewModel.getAirportListLiveData()
+        val airportList = airportListLiveData.value ?: emptyList()
         val spinner = findViewById<Spinner>(R.id.airport_spinner)
+        val airportSwitch = findViewById<Switch>(R.id.airport_switch)
+
+        val searchButton = findViewById<Button>(R.id.button)
+
         viewModel.getAirportListLiveData().observe(this){
         val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, airportList)
         spinner.adapter = spinnerAdapter
         }
 
-
-
-
-        val searchButton = findViewById<Button>(R.id.button)
-        val airportSwitch = findViewById<Switch>(R.id.airport_switch)
         searchButton.setOnClickListener{
-            val request = viewModel.requestFlightList(airportSwitch.isChecked, spinner.selectedItemPosition)
+
+            // viewModel.requestFlightList(airportSwitch.isChecked, spinner.selectedItemPosition, context = this)
+            // val request = viewModel.getFlightListLiveData()
             // Effectuez la requête pour obtenir le JSON, par exemple avec Retrofit ou Volley
-            val jsonResult = request.toString()
-            Log.i("res", jsonResult)
+            // val jsonResult = request.toString()
+            // Log.i("res", jsonResult)
+            val airport = viewModel.getAirportListLiveData().value!![spinner.selectedItemPosition].icao
+            val depart =( viewModel.getBeginDateLiveData().value!!.timeInMillis / 1000).toString()
+            val arrivee =( viewModel.getEndDateLiveData().value!!.timeInMillis / 1000).toString()
             // Créez une intention pour ouvrir la nouvelle activité
             val intent = Intent(this, FlightListActivity::class.java)
-            intent.putExtra("json_data", jsonResult)
+            intent.putExtra("airport", airport)
+            intent.putExtra("depart",depart)
+            intent.putExtra("arrivee", arrivee)
+            intent.putExtra("airportSwitch", airportSwitch.isChecked)
+
             startActivity(intent)
         }
 //        val searchButton = findViewById<Button>(R.id.button)
@@ -70,10 +79,6 @@ class MainActivity : AppCompatActivity() {
 //                }
 //            }
 //        }
-
-
-
-
 
         viewModel.getBeginDateLiveData().observe(this, Observer { calendar ->
             fromDateTextView.text = Utils.formatCalendarDate(calendar)
