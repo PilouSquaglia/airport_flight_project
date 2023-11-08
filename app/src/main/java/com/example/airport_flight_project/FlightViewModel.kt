@@ -47,6 +47,7 @@ class FlightViewModel : ViewModel() {
         } catch (e: JsonSyntaxException) {
             Log.e("FlightViewModel", "Erreur lors de la désérialisation du JSON", e)
         }
+        
     }
 
     fun requestFlightList(airport: String,depart: String, arrivee: String,airportSwitch: Boolean, context: Context){
