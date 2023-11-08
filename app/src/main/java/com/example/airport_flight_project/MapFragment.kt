@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import org.osmdroid.api.IMapController
 import org.osmdroid.config.Configuration
@@ -38,6 +39,9 @@ class MapFragment()  : Fragment() {
         val ctx = activity?.applicationContext ?: return view
         mapViewModel = ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
         mapViewModel.requestFlightList(context = ctx)
+
+//        val flight = mapViewModel.getFlightTravelLiveData()
+//        Log.d(TAG, "onCreateView: "+ flight)
 
         val view = inflater.inflate(R.layout.fragment_map, container, false)
 
