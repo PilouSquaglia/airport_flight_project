@@ -51,7 +51,7 @@ class MapViewModel : ViewModel(){
 
                 } else {
                     Log.e("REQUEST", "ERROR NO RESULT")
-                    val jsonFile = Utils.readJsonFromAssets(context = context, "mock.json")
+                    val jsonFile = Utils.readJsonFromAssets(context = context, "flight.json")
                     val data: FlightTravelModel =
                         Gson().fromJson(jsonFile, FlightTravelModel::class.java)
                     _travel.postValue(data)

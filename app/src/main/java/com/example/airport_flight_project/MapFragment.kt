@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import org.osmdroid.api.IMapController
 import org.osmdroid.config.Configuration
@@ -36,16 +37,26 @@ class MapFragment()  : Fragment() {
         mapViewModel = ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
         mapViewModel.requestFlightList(context =context)
 
-        val flight = mapViewModel.getFlightTravelLiveData().value
-        Log.d(TAG, "onCreateView: "+ flight)
+//        val flight = mapViewModel.getFlightTravelLiveData()
+//        Log.d(TAG, "onCreateView: "+ flight)
+
         val view = inflater.inflate(R.layout.fragment_map, container, false)
         val ctx = activity?.applicationContext ?: return view
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx))
         osm = view.findViewById(R.id.map)
 
         mc = osm.controller
-        mc.setZoom(15.0)
+        mc.setZoom(5.0)
 
+        mapViewModel.getFlightTravelLiveData().observe(viewLifecycleOwner, Observer {
+            Log.d("OKBGGG", "OKKKK")
+            val lstLatLng = ArrayList<Pair<Double, Double>>()
+
+            for(el in it.path) {
+                lstLatLng.add(Pair(el.get(0).toString().toDouble(), el.get(1).toString().toDouble()))
+            }
+//           mapViewModel.setLatLngLstForMap(lstLatLng)
+        })
 
         return view
 
