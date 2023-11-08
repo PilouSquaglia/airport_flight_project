@@ -2,6 +2,7 @@ package com.example.airport_flight_project
 
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -63,7 +64,10 @@ class MapViewModel : ViewModel(){
                     val data: FlightTravelModel =
                         Gson().fromJson(jsonFile, FlightTravelModel::class.java)
                     _travel.postValue(data)
-
+                    // Afficher un Toast
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(context, "Une erreur s'est produite lors de la récupération des données voici le fichier de test", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
