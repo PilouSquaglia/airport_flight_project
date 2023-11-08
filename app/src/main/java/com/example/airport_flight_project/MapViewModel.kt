@@ -17,6 +17,7 @@ class MapViewModel : ViewModel(){
 
     private val _flight = MutableLiveData<FlightModel>()
     private val _travel = MutableLiveData<FlightTravelModel>()
+    private val _dataPath = MutableLiveData<ArrayList<Pair<Double, Double>>>()
 
     fun setFlightLiveData(flight: FlightModel){
          _flight.value = flight
@@ -27,6 +28,13 @@ class MapViewModel : ViewModel(){
 
     fun getFlightTravelLiveData():LiveData<FlightTravelModel>{
         return _travel
+    }
+
+    fun setFlightDataPathLiveData(data: ArrayList<Pair<Double, Double>>){
+        _dataPath.value = data
+    }
+    fun getFlightDataPathLiveData():LiveData<ArrayList<Pair<Double, Double>>>{
+        return _dataPath
     }
 
     fun requestFlightList(context: Context){
