@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentContainerView
+import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.commit
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -31,8 +32,6 @@ class FlightListActivity : AppCompatActivity() {
         val arrivee = intent.getStringExtra("arrivee").toString()
         val airportSwitch = intent.getBooleanExtra("airportSwitch",false)
 
-        val isTablet = findViewById<FragmentContainerView>(R.id.fragmentContainerViewMap) != null
-
         val jsonData = intent.getStringExtra("json_data").toString()
         Log.i("res", jsonData)
 
@@ -54,20 +53,14 @@ class FlightListActivity : AppCompatActivity() {
             mapViewModel = ViewModelProvider(this).get(MapViewModel::class.java)
             mapViewModel.setFlightLiveData(flightData)
 
-            if(!isTablet) {
-                val fragmentMap = MapFragment()
-                this.supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainerView, fragmentMap)
-                    .addToBackStack(null)
-                    .commit()
-            }else{
-                // ici on retrouve le second fragment
-                val fragmentMap = MapFragment()
-                this.supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainerViewMap, fragmentMap)
-                    .addToBackStack(null)
-                    .commit()
-            }
+
+
+            val fragmentMap = MapFragment()
+            this.supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView, fragmentMap)
+                .addToBackStack(null)  // Pour permettre la navigation en arrière si nécessaire
+                .commit()
+
         })
 
     }
