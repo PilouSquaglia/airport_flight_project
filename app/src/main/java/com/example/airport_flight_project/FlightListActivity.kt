@@ -2,6 +2,8 @@ package com.example.airport_flight_project
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import androidx.lifecycle.Observer
@@ -15,10 +17,17 @@ class FlightListActivity : AppCompatActivity() {
 
     private lateinit var viewModel: FlightViewModel
 
+
     private lateinit var mapViewModel: MapViewModel
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.flight_list_view)
+
+
+
+
 
         val airport = intent.getStringExtra("airport").toString()
         val depart = intent.getStringExtra("depart").toString()
@@ -31,6 +40,8 @@ class FlightListActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(FlightViewModel::class.java)
 
         viewModel.requestFlightList(airport = airport,depart = depart,arrivee= arrivee, airportSwitch= airportSwitch, context = this )
+// Utilisation de FragmentTransaction pour remplacer le FragmentContainerView
+        supportFragmentManager.beginTransaction().replace(R.id.fragmentContainerView, ListOfFlightsFragment()).commit()
 
         val transaction = supportFragmentManager.beginTransaction()
         val fragment = ListOfFlightsFragment()
@@ -39,9 +50,17 @@ class FlightListActivity : AppCompatActivity() {
         transaction.commit()
 
 
+
+
         viewModel.getFlightLiveData().observe(this, Observer { flightData ->
+
+
+
+
             mapViewModel = ViewModelProvider(this).get(MapViewModel::class.java)
             mapViewModel.setFlightLiveData(flightData)
+
+
 
             val fragmentMap = MapFragment()
             this.supportFragmentManager.beginTransaction()
