@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.commit
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -25,14 +26,13 @@ class FlightListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.flight_list_view)
 
-
-
-
-
         val airport = intent.getStringExtra("airport").toString()
         val depart = intent.getStringExtra("depart").toString()
         val arrivee = intent.getStringExtra("arrivee").toString()
         val airportSwitch = intent.getBooleanExtra("airportSwitch",false)
+
+
+        val isTablet = findViewById<FragmentContainerView>(R.id.fragmentContainerViewMap) != null
 
         val jsonData = intent.getStringExtra("json_data").toString()
         Log.i("res", jsonData)
@@ -49,25 +49,24 @@ class FlightListActivity : AppCompatActivity() {
         transaction.addToBackStack(null)
         transaction.commit()
 
-
-
-
         viewModel.getFlightLiveData().observe(this, Observer { flightData ->
-
-
-
 
             mapViewModel = ViewModelProvider(this).get(MapViewModel::class.java)
             mapViewModel.setFlightLiveData(flightData)
 
-
-
-            val fragmentMap = MapFragment()
-            this.supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, fragmentMap)
-                .addToBackStack(null)  // Pour permettre la navigation en arrière si nécessaire
-                .commit()
-
+            if(!isTablet) {
+                val fragmentMap = MapFragment()
+                this.supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainerView, fragmentMap)
+                    .addToBackStack(null)  // Pour permettre la navigation en arrière si nécessaire
+                    .commit()
+            }else{
+                val fragmentMap = MapFragment()
+                this.supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainerViewMap, fragmentMap)
+                    .addToBackStack(null)  // Pour permettre la navigation en arrière si nécessaire
+                    .commit()
+            }
         })
 
     }
