@@ -20,7 +20,6 @@ import com.example.airport_flight_project.Utils.Companion.readJsonFromAssets
  */
 class ListOfFlightsFragment : Fragment(), OnFlightClickListener{
     private lateinit var viewModel: FlightViewModel
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -34,7 +33,7 @@ class ListOfFlightsFragment : Fragment(), OnFlightClickListener{
     ): View? {
 
         viewModel = ViewModelProvider(requireActivity()).get(FlightViewModel::class.java)
-        Log.d("OK",viewModel.getFlightListLiveData().toString())
+
         // Récupérez le JSON transmis depuis l'activité précédente
         val view = inflater.inflate(R.layout.fragment_list_of_flights, container, false)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
@@ -50,7 +49,7 @@ class ListOfFlightsFragment : Fragment(), OnFlightClickListener{
 
         // Observez les données dans le ViewModel et mettez à jour l'Adapter chaque fois qu'elles changent
         viewModel.getFlightListLiveData().observe(viewLifecycleOwner, Observer { flightList ->
-            Log.d("OK OBS",flightList.toString())
+
             adapter.updateFlights(flightList.toList())
         })
 
@@ -71,11 +70,14 @@ class ListOfFlightsFragment : Fragment(), OnFlightClickListener{
     }
 
     override fun onFlightClick(flight: FlightModel) {
-        val newFragment = MapFragment(flight)
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainerView, newFragment)
-            .addToBackStack(null)
-            .commit()
+        viewModel.setFlightLiveData(flight)
+//        mapViewModel = ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
+//        mapViewModel.setFlightLiveData(flight)
+//        val newFragment = MapFragment()
+//        parentFragmentManager.beginTransaction()
+//            .replace(R.id.fragmentContainerView, newFragment)
+//            .addToBackStack(null)
+//            .commit()
     }
 
 

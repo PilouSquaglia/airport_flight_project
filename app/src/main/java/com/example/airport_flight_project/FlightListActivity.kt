@@ -15,6 +15,7 @@ class FlightListActivity : AppCompatActivity() {
 
     private lateinit var viewModel: FlightViewModel
 
+    private lateinit var mapViewModel: MapViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.flight_list_view)
@@ -36,6 +37,19 @@ class FlightListActivity : AppCompatActivity() {
         transaction.replace(R.id.fragmentContainerView, fragment)
         transaction.addToBackStack(null)
         transaction.commit()
+
+
+        viewModel.getFlightLiveData().observe(this, Observer { flightData ->
+            mapViewModel = ViewModelProvider(this).get(MapViewModel::class.java)
+            mapViewModel.setFlightLiveData(flightData)
+
+            val fragmentMap = MapFragment()
+            this.supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView, fragmentMap)
+                .addToBackStack(null)  // Pour permettre la navigation en arrière si nécessaire
+                .commit()
+
+        })
 
     }
 }

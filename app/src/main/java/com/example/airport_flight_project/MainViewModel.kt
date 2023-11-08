@@ -83,21 +83,9 @@ class MainViewModel : ViewModel() {
                     val parser = JsonParser()
                     val jsonElement = parser.parse(result)
 
-                    /*for (flightObject in jsonElement.asJsonArray) {
-                        flightList.add(
-                            Gson().fromJson(
-                                flightObject.asJsonObject,
-                                FlightModel::class.java
-                            )
-                        )
-                    }*/
                     val data: Array<FlightModel> =
                         Gson().fromJson(jsonElement, Array<FlightModel>::class.java)
                     flightListLiveData.postValue(data)
-                    // setFlightListLiveData(flightList)
-                    // Equivalent à
-                    // flightListLiveData.value = flightList
-                    Log.i("Res", result)
 
                 } else {
                     Log.e("REQUEST", "ERROR NO RESULT")
@@ -112,17 +100,5 @@ class MainViewModel : ViewModel() {
         }
     }
 
-//    suspend fun requestFlightList(isArrival: Boolean, selectedAirportIndex: Int): String? {
-//        return viewModelScope.async {
-//            val url = if (isArrival) RequestManager.FLIGHT_ARRIVAL_ENDPOINT else RequestManager.FLIGHT_DEPARTURE_ENDPOINT
-//            val params = HashMap<String, String>().apply {
-//                put("airport", airportListLiveData.value!![selectedAirportIndex].icao)
-//                put("begin", (beginDateLiveData.value!!.timeInMillis / 1000).toString())
-//                put("end", (endDateLiveData.value!!.timeInMillis / 1000).toString())
-//            }
-//            val result = RequestManager.getSuspended(url, params)
-//            result
-//        }.await()
-//    }
 
 }
