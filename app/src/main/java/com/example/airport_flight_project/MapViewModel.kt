@@ -42,6 +42,13 @@ class MapViewModel : ViewModel(){
         return _dataPath
     }
 
+    fun setFlightDataPathLiveData(data: ArrayList<Pair<Double, Double>>){
+        _dataPath.value = data
+    }
+    fun getFlightDataPathLiveData():LiveData<ArrayList<Pair<Double, Double>>>{
+        return _dataPath
+    }
+
     fun requestFlightList(context: Context){
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
