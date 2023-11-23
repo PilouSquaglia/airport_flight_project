@@ -15,10 +15,13 @@ import kotlinx.coroutines.withContext
 
 class MapViewModel : ViewModel(){
     private val BASE_URL = "https://opensky-network.org/api/tracks/all?icao24="
+    private val REQUEST_STATE_URL = BASE_URL+"states/all"
 
     private val _flight = MutableLiveData<FlightModel>()
     private val _travel = MutableLiveData<FlightTravelModel>()
     private val _dataPath = MutableLiveData<ArrayList<Pair<Double, Double>>>()
+    private val jsonContent = MutableLiveData<List<PlaneModel>>()
+    private val _plane = MutableLiveData<PlaneModel>()
 
     fun setFlightLiveData(flight: FlightModel){
          _flight.value = flight
@@ -68,6 +71,43 @@ class MapViewModel : ViewModel(){
                     withContext(Dispatchers.Main) {
                         Toast.makeText(context, "Une erreur s'est produite lors de la récupération des données voici le fichier de test", Toast.LENGTH_SHORT).show()
                     }
+                }
+            }
+        }
+    }
+
+    fun requestPlanePosition(context: Context){
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val req = REQUEST_STATE_URL
+                Log.i("${_plane.value!!.Time} Timeeeeeeeeeeeeeeeeeeeeeeeeee", "eee")
+                Log.i("${_plane.value!!.icao24} iceaooooooooooooooooooooo", "eee")
+                val result = RequestManager.getSuspended(
+                    "$req?time=${_plane.value!!.Time}&icao24=${_plane.value!!.icao24}",
+                    HashMap())
+
+                Log.i("REQUEST", result.toString())
+                if (result != null) {
+                    Log.i("REQUEST", result)
+
+                    val flightList = ArrayList<PlaneModel>()
+                    val parser = JsonParser()
+                    val jsonElement = parser.parse(result)
+
+
+                    val data: Array<PlaneModel> =
+                        Gson().fromJson(jsonElement, Array<PlaneModel>::class.java)
+                    jsonContent.postValue(data.toList())
+                    Log.i("Res", result)
+
+                } else {
+                    Log.e("REQUEST", "ERROR NO RESULT")
+                    val jsonFile = Utils.readJsonFromAssets(context = context, "position.json")
+
+                    val data: Array<PlaneModel> =
+                        Gson().fromJson(jsonFile, Array<PlaneModel>::class.java)
+                    jsonContent.postValue(data.toList())
+
                 }
             }
         }

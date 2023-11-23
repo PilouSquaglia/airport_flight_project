@@ -40,7 +40,11 @@ class MapFragment()  : Fragment() {
     ): View? {
         val ctx = activity?.applicationContext ?: return view
         mapViewModel = ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
-        mapViewModel.requestFlightList(context =ctx)
+        mapViewModel.requestFlightList(context = ctx)
+
+        Log.i("AAAAAAAAAAAAA##################################", "################################")
+        mapViewModel.requestPlanePosition(context = ctx)
+        Log.i("AAAAAAAAAAAAA##################################", "AAAAAAAAAAAAAA################################")
 
         val view = inflater.inflate(R.layout.fragment_map, container, false)
 
