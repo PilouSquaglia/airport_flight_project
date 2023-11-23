@@ -14,7 +14,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MapViewModel : ViewModel(){
-    private val BASE_URL = "https://opensky-network.org/api/tracks/all?icao24="
+    private val BASE_URL = "https://opensky-network.org/api/"
+    private val REQUEST_TRACKS_URL = BASE_URL+ "tracks/all?icao24="
     private val REQUEST_STATE_URL = BASE_URL+"states/all"
 
     private val _flight = MutableLiveData<FlightModel>()
@@ -45,7 +46,7 @@ class MapViewModel : ViewModel(){
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val result = RequestManager.getSuspended(
-                    "$BASE_URL${_flight.value!!.icao24}&time=0",
+                    "$REQUEST_TRACKS_URL${_flight.value!!.icao24}&time=0",
                     HashMap())
 
                 Log.i("REQUEST", result.toString())
@@ -60,7 +61,7 @@ class MapViewModel : ViewModel(){
                     _travel.postValue(data)
                     Log.i("Res", result)
 
-
+                    requestPlanePosition(context)
                 } else {
                     Log.e("REQUEST", "ERROR NO RESULT")
                     val jsonFile = Utils.readJsonFromAssets(context = context, "flight.json")
@@ -71,19 +72,20 @@ class MapViewModel : ViewModel(){
                     withContext(Dispatchers.Main) {
                         Toast.makeText(context, "Une erreur s'est produite lors de la récupération des données voici le fichier de test", Toast.LENGTH_SHORT).show()
                     }
+
+                    requestPlanePosition(context)
                 }
             }
         }
     }
 
-    fun requestPlanePosition(context: Context){
+    suspend fun requestPlanePosition(context: Context){
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val req = REQUEST_STATE_URL
-                Log.i("${_plane.value!!.Time} Timeeeeeeeeeeeeeeeeeeeeeeeeee", "eee")
-                Log.i("${_plane.value!!.icao24} iceaooooooooooooooooooooo", "eee")
+
                 val result = RequestManager.getSuspended(
-                    "$req?time=${_plane.value!!.Time}&icao24=${_plane.value!!.icao24}",
+                    "$req?time=${_travel.value!!.startTime}&icao24=${_travel.value!!.icao24}",
                     HashMap())
 
                 Log.i("REQUEST", result.toString())
@@ -104,9 +106,9 @@ class MapViewModel : ViewModel(){
                     Log.e("REQUEST", "ERROR NO RESULT")
                     val jsonFile = Utils.readJsonFromAssets(context = context, "position.json")
 
-                    val data: Array<PlaneModel> =
-                        Gson().fromJson(jsonFile, Array<PlaneModel>::class.java)
-                    jsonContent.postValue(data.toList())
+                    val data: PlaneModel =
+                        Gson().fromJson(jsonFile, PlaneModel::class.java)
+                    _plane.postValue(data)
 
                 }
             }

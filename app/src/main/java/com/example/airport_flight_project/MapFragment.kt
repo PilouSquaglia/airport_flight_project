@@ -43,7 +43,7 @@ class MapFragment()  : Fragment() {
         mapViewModel.requestFlightList(context = ctx)
 
         Log.i("AAAAAAAAAAAAA##################################", "################################")
-        mapViewModel.requestPlanePosition(context = ctx)
+        //mapViewModel.requestPlanePosition(context = ctx)
         Log.i("AAAAAAAAAAAAA##################################", "AAAAAAAAAAAAAA################################")
 
         val view = inflater.inflate(R.layout.fragment_map, container, false)
@@ -112,6 +112,7 @@ class MapFragment()  : Fragment() {
             // desactive le draw
             //osm.invalidate()
         })
+
 
         return view
 
