@@ -3,7 +3,7 @@
 ## Réservation de Vols
 
 **Version :** 1.0.0  
-**Auteur :** Votre Nom
+**Auteur :** Dogs
 
 ---
 
