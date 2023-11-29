@@ -1,5 +1,3 @@
-# airport_flight_project
-
 ## Réservation de Vols
 
 **Version :** 1.0.0  
@@ -50,10 +48,11 @@ Un aperçu de son vol
 
 La même vue que portable
 
-<img width="500" alt="Capture d’écran 2023-11-28 à 19 48 14" src="https://github.com/PilouSquaglia/airport_flight_project/assets/94166764/842a9cd7-8861-41eb-9f7c-18cbb28c4ba3">
+<img width="400" alt="Capture d’écran 2023-11-29 à 18 22 51" src="https://github.com/PilouSquaglia/airport_flight_project/assets/94166764/8fa81c50-3dec-4ebd-a229-4f80d0c90720">
+<img width="400" alt="Capture d’écran 2023-11-29 à 18 23 04" src="https://github.com/PilouSquaglia/airport_flight_project/assets/94166764/22e2ce96-79c2-4799-b9c0-bdc3d1004e21">
 
 Cette vue confond la liste et l'aperçu du vol identique à celle du portable 
 
-<img width="362" alt="Capture d’écran 2023-11-28 à 20 15 07" src="https://github.com/PilouSquaglia/airport_flight_project/assets/94166764/042dd081-21af-481a-92a9-7d38c27d155a">
+<img width="400" alt="Capture d’écran 2023-11-28 à 20 15 07" src="https://github.com/PilouSquaglia/airport_flight_project/assets/94166764/042dd081-21af-481a-92a9-7d38c27d155a">
 
 ---
