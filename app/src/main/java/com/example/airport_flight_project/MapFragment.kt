@@ -21,6 +21,7 @@ class MapFragment()  : Fragment() {
     private lateinit var mc: IMapController
     private lateinit var locationManager: LocationManager
     private lateinit var mapViewModel: MapViewModel
+    private lateinit var loadingIndicator: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +36,8 @@ class MapFragment()  : Fragment() {
         val context = requireActivity().applicationContext
         mapViewModel = ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
         mapViewModel.requestFlightList(context =context)
-
+        loadingIndicator = view.findViewById(R.id.loading_indicator_flight_list)
+        loadingIndicator.visibility = View.VISIBLE
         val flight = mapViewModel.getFlightTravelLiveData().value
         Log.d(TAG, "onCreateView: "+ flight)
         val view = inflater.inflate(R.layout.fragment_map, container, false)
