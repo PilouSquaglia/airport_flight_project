@@ -49,13 +49,7 @@ class FlightListActivity : AppCompatActivity() {
         transaction.addToBackStack(null)
         transaction.commit()
 
-
-
-
         viewModel.getFlightLiveData().observe(this, Observer { flightData ->
-
-
-
 
             mapViewModel = ViewModelProvider(this).get(MapViewModel::class.java)
             mapViewModel.setFlightLiveData(flightData)

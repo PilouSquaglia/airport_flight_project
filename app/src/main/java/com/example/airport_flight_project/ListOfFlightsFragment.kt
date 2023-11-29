@@ -1,7 +1,6 @@
 package com.example.airport_flight_project
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.airport_flight_project.Utils.Companion.readJsonFromAssets
 
 /**
  * A simple [Fragment] subclass.
