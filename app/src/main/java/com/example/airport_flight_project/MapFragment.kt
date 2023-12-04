@@ -1,6 +1,5 @@
 package com.example.airport_flight_project
 
-import android.annotation.SuppressLint
 import android.location.LocationManager
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -14,7 +13,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import org.osmdroid.api.IMapController
 import org.osmdroid.config.Configuration
+import org.osmdroid.util.BoundingBox
+import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.Polyline
 import kotlin.math.cos
 
 
@@ -22,7 +25,6 @@ import kotlin.math.cos
 class MapFragment()  : Fragment() {
     private lateinit var osm: MapView
     private lateinit var mc: IMapController
-    private lateinit var locationManager: LocationManager
     private lateinit var mapViewModel: MapViewModel
     private lateinit var loadingIndicator: ProgressBar
 
@@ -36,19 +38,20 @@ class MapFragment()  : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val context = requireActivity().applicationContext
+        val ctx = activity?.applicationContext ?: return view
         mapViewModel = ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
-        mapViewModel.requestFlightList(context =context)
+        mapViewModel.requestFlightList(context = ctx)
 
-        val flight = mapViewModel.getFlightTravelLiveData().value
-        Log.d(TAG, "onCreateView: "+ flight)
+        Log.i("AAAAAAAAAAAAA##################################", "################################")
+        //mapViewModel.requestPlanePosition(context = ctx)
+        Log.i("AAAAAAAAAAAAA##################################", "AAAAAAAAAAAAAA################################")
+
 
         val view = inflater.inflate(R.layout.fragment_map, container, false)
 
         loadingIndicator = view.findViewById(R.id.loading_indicator_flight_map)
         loadingIndicator.visibility = View.VISIBLE
 
-        val ctx = activity?.applicationContext ?: return view
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx))
         osm = view.findViewById(R.id.map)
 
@@ -63,5 +66,36 @@ class MapFragment()  : Fragment() {
         return view
 
     }
+
+//    override fun onPause() {
+//        super.onPause()
+//        // Log.d("resume", "onPause: ")
+//        // Enregistrez l'état actuel de la carte
+//        val currentZoomLevel = osm.zoomLevelDouble
+//        val currentCenter = osm.mapCenter
+//
+//        val sharedPreferences = activity?.getSharedPreferences("mapState", Context.MODE_PRIVATE)
+//        sharedPreferences?.edit()?.apply {
+//            putFloat("zoomLevel", currentZoomLevel.toFloat())
+//            putString("centerLat", currentCenter.latitude.toString())
+//            putString("centerLon", currentCenter.longitude.toString())
+//            apply()
+//        }
+//    }
+//
+//    override fun onResume() {
+//        super.onResume()
+//        // Log.d("resume", "onResume: ")
+//        // Restaurez l'état de la carte à partir des préférences partagées
+//        val sharedPreferences = activity?.getSharedPreferences("mapState", Context.MODE_PRIVATE)
+//        if (sharedPreferences != null) {
+//            val zoomLevel = sharedPreferences.getFloat("zoomLevel", 5.0f).toDouble()
+//            val centerLat = sharedPreferences.getString("centerLat", "0.0")?.toDouble() ?: 0.0
+//            val centerLon = sharedPreferences.getString("centerLon", "0.0")?.toDouble() ?: 0.0
+//
+//            mc.setZoom(zoomLevel)
+//            mc.setCenter(GeoPoint(centerLat, centerLon))
+//        }
+//    }
 
 }

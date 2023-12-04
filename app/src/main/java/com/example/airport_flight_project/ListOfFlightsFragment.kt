@@ -34,8 +34,6 @@ class ListOfFlightsFragment : Fragment(), OnFlightClickListener{
         savedInstanceState: Bundle?
     ): View? {
 
-
-
         viewModel = ViewModelProvider(requireActivity()).get(FlightViewModel::class.java)
 
         // Récupérez le JSON transmis depuis l'activité précédente

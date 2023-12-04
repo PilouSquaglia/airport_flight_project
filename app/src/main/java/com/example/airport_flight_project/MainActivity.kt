@@ -3,7 +3,6 @@ package com.example.airport_flight_project
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
@@ -12,7 +11,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.coroutines.runBlocking
 import java.util.Calendar
 
 
@@ -52,6 +50,7 @@ class MainActivity : AppCompatActivity() {
             val airport = viewModel.getAirportListLiveData().value!![spinner.selectedItemPosition].icao
             val depart =( viewModel.getBeginDateLiveData().value!!.timeInMillis / 1000).toString()
             val arrivee =( viewModel.getEndDateLiveData().value!!.timeInMillis / 1000).toString()
+
             // Créez une intention pour ouvrir la nouvelle activité
             val intent = Intent(this, FlightListActivity::class.java)
             intent.putExtra("airport", airport)

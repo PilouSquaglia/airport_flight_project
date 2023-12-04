@@ -21,6 +21,9 @@ import kotlin.collections.HashMap
 
 class MainViewModel : ViewModel() {
 
+    private val BASE_URL = "https://opensky-network.org/api/tracks/all?icao24="
+    private val REQUEST_STATE_URL = BASE_URL+"states/all"
+
     private val beginDateLiveData = MutableLiveData<Calendar>(Calendar.getInstance())
     private val endDateLiveData = MutableLiveData<Calendar>(Calendar.getInstance())
 
@@ -28,6 +31,7 @@ class MainViewModel : ViewModel() {
     private val airportListNamesLiveData = MutableLiveData<List<String>>()
 
     private val flightListLiveData = MutableLiveData<Array<FlightModel>>()
+
     init{
         val airportList = Utils.generateAirportList()
         airportListLiveData.value = airportList

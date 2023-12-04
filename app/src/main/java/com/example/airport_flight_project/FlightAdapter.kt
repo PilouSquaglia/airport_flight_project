@@ -19,6 +19,7 @@ class FlightAdapter(private var flights: List<FlightModel>, private val listener
         val timeToTravel: TextView
         val arrivedDate: TextView
         val arrivedAirport: TextView
+        val callSign: TextView
 
         init {
             // Define click listener for the ViewHolder's View
@@ -27,7 +28,7 @@ class FlightAdapter(private var flights: List<FlightModel>, private val listener
             timeToTravel = view.findViewById(R.id.time_travel_cell_flight)
             arrivedDate = view.findViewById(R.id.arrived_date_cell_flight)
             arrivedAirport = view.findViewById(R.id.arrived_airport_cell_flight)
-
+            callSign = view.findViewById(R.id.callSign)
 
         }
     }
@@ -59,6 +60,7 @@ class FlightAdapter(private var flights: List<FlightModel>, private val listener
         holder.timeToTravel.text = time
         holder.arrivedDate.text = formattedDateArrived
         holder.arrivedAirport.text = flight.estArrivalAirport
+        holder.callSign.text = flight.callsign
 
         holder.itemView.setOnClickListener(){
             listener.onFlightClick(flight)
