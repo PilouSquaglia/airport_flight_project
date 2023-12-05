@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentContainerView
-import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.commit
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -31,9 +30,6 @@ class FlightListActivity : AppCompatActivity() {
         val depart = intent.getStringExtra("depart").toString()
         val arrivee = intent.getStringExtra("arrivee").toString()
         val airportSwitch = intent.getBooleanExtra("airportSwitch",false)
-
-        val isTablet = findViewById<FragmentContainerView>(R.id.fragmentContainerViewMap) != null
-
 
         val isTablet = findViewById<FragmentContainerView>(R.id.fragmentContainerViewMap) != null
 

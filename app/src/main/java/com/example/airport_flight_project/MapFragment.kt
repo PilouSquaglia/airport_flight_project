@@ -39,7 +39,6 @@ class MapFragment()  : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val ctx = activity?.applicationContext ?: return view
-        val ctx = activity?.applicationContext ?: return view
         mapViewModel = ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
         mapViewModel.requestFlightList(context =ctx)
 

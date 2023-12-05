@@ -42,13 +42,6 @@ class MapViewModel : ViewModel(){
         return _dataPath
     }
 
-    fun setFlightDataPathLiveData(data: ArrayList<Pair<Double, Double>>){
-        _dataPath.value = data
-    }
-    fun getFlightDataPathLiveData():LiveData<ArrayList<Pair<Double, Double>>>{
-        return _dataPath
-    }
-
     fun requestFlightList(context: Context){
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -71,7 +64,6 @@ class MapViewModel : ViewModel(){
                     requestPlanePosition(context)
                 } else {
                     Log.e("REQUEST", "ERROR NO RESULT")
-                    val jsonFile = Utils.readJsonFromAssets(context = context, "flight.json")
                     val jsonFile = Utils.readJsonFromAssets(context = context, "flight.json")
                     val data: FlightTravelModel =
                         Gson().fromJson(jsonFile, FlightTravelModel::class.java)
