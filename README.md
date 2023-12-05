@@ -42,7 +42,7 @@ La liste des vol disponible
 
 Un aperçu de son vol
 
-<img width="381" alt="Capture d’écran 2023-11-28 à 19 44 58" src="https://github.com/PilouSquaglia/airport_flight_project/assets/94166764/d8c1926a-0a18-410f-a9f3-7bac3b9c8ca3">
+<img width="439" alt="image" src="https://github.com/PilouSquaglia/airport_flight_project/assets/94166764/6a95686c-72a2-47ae-90b5-099213ec5a16">
 
   ### Tablette
 
@@ -53,6 +53,7 @@ La même vue que portable
 
 Cette vue confond la liste et l'aperçu du vol identique à celle du portable 
 
-<img width="400" alt="Capture d’écran 2023-11-28 à 20 15 07" src="https://github.com/PilouSquaglia/airport_flight_project/assets/94166764/042dd081-21af-481a-92a9-7d38c27d155a">
+<img width="1149" alt="image" src="https://github.com/PilouSquaglia/airport_flight_project/assets/94166764/457cb396-bde6-493e-a62b-258c34898c94">
+
 
 ---

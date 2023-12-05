@@ -1,6 +1,8 @@
 package com.example.airport_flight_project
 
+import android.content.Context
 import android.graphics.Color
+
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.view.LayoutInflater
@@ -12,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import org.osmdroid.api.IMapController
 import org.osmdroid.config.Configuration
+import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
@@ -36,11 +39,9 @@ class MapFragment()  : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val ctx = activity?.applicationContext ?: return view
+        val ctx = activity?.applicationContext ?: return view
         mapViewModel = ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
-        mapViewModel.requestFlightList(context = ctx)
-
-//        val flight = mapViewModel.getFlightTravelLiveData()
-//        Log.d(TAG, "onCreateView: "+ flight)
+        mapViewModel.requestFlightList(context =ctx)
 
         val view = inflater.inflate(R.layout.fragment_map, container, false)
 
