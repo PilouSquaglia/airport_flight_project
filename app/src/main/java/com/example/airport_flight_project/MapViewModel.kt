@@ -3,7 +3,6 @@ package com.example.airport_flight_project
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -34,13 +33,6 @@ class MapViewModel : ViewModel(){
 
     fun getFlightTravelLiveData():LiveData<FlightTravelModel>{
         return _travel
-    }
-
-    fun setFlightDataPathLiveData(data: ArrayList<Pair<Double, Double>>){
-        _dataPath.value = data
-    }
-    fun getFlightDataPathLiveData():LiveData<ArrayList<Pair<Double, Double>>>{
-        return _dataPath
     }
 
     fun setFlightDataPathLiveData(data: ArrayList<Pair<Double, Double>>){
