@@ -41,7 +41,7 @@ dependencies {
 
     //map
     implementation ("org.osmdroid:osmdroid-android:6.0.2")
-
+    // implementation ("org.osmdroid:osmdroid-api:6.2.3")
     // implementation ("org.osmdroid:osmdroid-bonuspack:6.6.0")
 
     implementation("androidx.fragment:fragment-ktx:1.6.1")

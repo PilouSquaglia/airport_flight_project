@@ -1,9 +1,8 @@
 package com.example.airport_flight_project
 
-import android.location.LocationManager
+import android.graphics.Color
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,12 +12,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import org.osmdroid.api.IMapController
 import org.osmdroid.config.Configuration
-import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
-import kotlin.math.cos
 
 
 @Suppress("DEPRECATION")
@@ -27,7 +24,7 @@ class MapFragment()  : Fragment() {
     private lateinit var mc: IMapController
     private lateinit var mapViewModel: MapViewModel
     private lateinit var loadingIndicator: ProgressBar
-
+    private val markers: ArrayList<Marker> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -42,11 +39,6 @@ class MapFragment()  : Fragment() {
         mapViewModel = ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
         mapViewModel.requestFlightList(context = ctx)
 
-        Log.i("AAAAAAAAAAAAA##################################", "################################")
-        //mapViewModel.requestPlanePosition(context = ctx)
-        Log.i("AAAAAAAAAAAAA##################################", "AAAAAAAAAAAAAA################################")
-
-
         val view = inflater.inflate(R.layout.fragment_map, container, false)
 
         loadingIndicator = view.findViewById(R.id.loading_indicator_flight_map)
@@ -56,46 +48,83 @@ class MapFragment()  : Fragment() {
         osm = view.findViewById(R.id.map)
 
         mc = osm.controller
-        mc.setZoom(15.0)
+        mc.setZoom(7.0)
 
         mapViewModel.getFlightLiveData().observe(viewLifecycleOwner, Observer { flight ->
+            // loadingIndicator.visibility = View.INVISIBLE
+        })
 
+        mapViewModel.getFlightTravelLiveData().observe(viewLifecycleOwner, Observer { plane ->
+
+            print(plane)
             loadingIndicator.visibility = View.INVISIBLE
+            drawFlightPath(plane.path)
         })
 
         return view
 
     }
 
-//    override fun onPause() {
-//        super.onPause()
-//        // Log.d("resume", "onPause: ")
-//        // Enregistrez l'état actuel de la carte
-//        val currentZoomLevel = osm.zoomLevelDouble
-//        val currentCenter = osm.mapCenter
-//
-//        val sharedPreferences = activity?.getSharedPreferences("mapState", Context.MODE_PRIVATE)
-//        sharedPreferences?.edit()?.apply {
-//            putFloat("zoomLevel", currentZoomLevel.toFloat())
-//            putString("centerLat", currentCenter.latitude.toString())
-//            putString("centerLon", currentCenter.longitude.toString())
-//            apply()
-//        }
-//    }
-//
-//    override fun onResume() {
-//        super.onResume()
-//        // Log.d("resume", "onResume: ")
-//        // Restaurez l'état de la carte à partir des préférences partagées
-//        val sharedPreferences = activity?.getSharedPreferences("mapState", Context.MODE_PRIVATE)
-//        if (sharedPreferences != null) {
-//            val zoomLevel = sharedPreferences.getFloat("zoomLevel", 5.0f).toDouble()
-//            val centerLat = sharedPreferences.getString("centerLat", "0.0")?.toDouble() ?: 0.0
-//            val centerLon = sharedPreferences.getString("centerLon", "0.0")?.toDouble() ?: 0.0
-//
-//            mc.setZoom(zoomLevel)
-//            mc.setCenter(GeoPoint(centerLat, centerLon))
-//        }
-//    }
+    private fun drawFlightPath(path: List<List<Any>>) {
+        clearMarkers()
+
+        // Ajouter le marqueur de départ
+        if (path.isNotEmpty()) {
+            val startPoint = path.first()
+            val startLatitude = startPoint[1] as Double
+            val startLongitude = startPoint[2] as Double
+            addMarker(startLatitude, startLongitude, "Départ")
+
+        }
+        // Ajouter le marqueur d'arrivée
+        if (path.isNotEmpty()) {
+            val endPoint = path.last()
+            val endLatitude = endPoint[1] as Double
+            val endLongitude = endPoint[2] as Double
+            addMarker(endLatitude, endLongitude, "Arrivée")
+        }
+
+        // Ajouter le reste des marqueurs et connecter
+        for (point in path) {
+            val latitude = point[1] as Double
+            val longitude = point[2] as Double
+            addPoint(latitude, longitude)
+        }
+
+        connectMarkers()
+        osm.controller.setCenter(markers.first().position)
+    }
+
+    private fun addMarker(latitude: Double, longitude: Double, title: String? = null) {
+        val marker = Marker(osm)
+        marker.position = GeoPoint(latitude, longitude)
+        //marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
+        if (title != null) {
+            marker.title = title
+        }
+        osm.overlays.add(marker)
+    }
+
+    private fun addPoint(latitude: Double, longitude: Double) {
+        val marker = Marker(osm)
+        marker.position = GeoPoint(latitude, longitude)
+        markers.add(marker)
+    }
+
+    private fun connectMarkers() {
+        if (markers.size >= 2) {
+            val line = Polyline(osm)
+            line.setColor(Color.BLUE)
+            line.setWidth(5f)
+            line.setPoints(markers.map { it.position })
+
+            osm.overlays.add(line)
+        }
+    }
+
+    private fun clearMarkers() {
+        osm.overlays.removeAll(markers)
+        markers.clear()
+    }
 
 }
