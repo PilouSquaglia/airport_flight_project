@@ -93,7 +93,6 @@ class MapFragment()  : Fragment() {
         })
 
         return view
-
     }
 
     private fun drawFlightPath(path: List<List<Any>>) {
