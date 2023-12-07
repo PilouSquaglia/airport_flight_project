@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.airport_flight_project.Utils.Companion.readJsonFromAssets
 import com.google.gson.Gson
 import com.google.gson.JsonParser
+import com.google.gson.JsonSyntaxException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -67,7 +68,7 @@ class MainViewModel : ViewModel() {
         return airportListLiveData
     }
 
-     fun requestFlightList(isArrival: Boolean, selectedAirportIndex: Int, context: Context){
+    fun requestFlightList(isArrival: Boolean, selectedAirportIndex: Int, context: Context){
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 //TODO faire requête
@@ -87,18 +88,26 @@ class MainViewModel : ViewModel() {
                     val parser = JsonParser()
                     val jsonElement = parser.parse(result)
 
-                    val data: Array<FlightModel> =
-                        Gson().fromJson(jsonElement, Array<FlightModel>::class.java)
-                    flightListLiveData.postValue(data)
+                    try{
+                        val data: Array<FlightModel> =
+                            Gson().fromJson(jsonElement, Array<FlightModel>::class.java)
+                        flightListLiveData.postValue(data)
+                    } catch (e: JsonSyntaxException) {
+                        Log.e("REQUEST", "Error during deserialization: ${e.localizedMessage}")
+                    }
 
                 } else {
                     Log.e("REQUEST", "ERROR NO RESULT")
                     val jsonFile = Utils.readJsonFromAssets(context = context, "mock.json")
                     //val reader = FileReader(jsonFile)
+                    try{
+                        val data: Array<FlightModel> =
+                            Gson().fromJson(jsonFile, Array<FlightModel>::class.java)
+                        flightListLiveData.postValue(data)
 
-                    val data: Array<FlightModel> =
-                        Gson().fromJson(jsonFile, Array<FlightModel>::class.java)
-                    flightListLiveData.postValue(data)
+                    } catch (e: JsonSyntaxException) {
+                        Log.e("REQUEST", "Error during deserialization: ${e.localizedMessage}")
+                    }
                 }
             }
         }

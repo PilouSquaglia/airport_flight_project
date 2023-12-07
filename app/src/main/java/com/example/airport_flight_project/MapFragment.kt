@@ -1,8 +1,6 @@
 package com.example.airport_flight_project
 
-import android.content.Context
 import android.graphics.Color
-
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.view.LayoutInflater
@@ -14,7 +12,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import org.osmdroid.api.IMapController
 import org.osmdroid.config.Configuration
-import org.osmdroid.util.BoundingBox
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
@@ -62,6 +59,37 @@ class MapFragment()  : Fragment() {
             print(plane)
             loadingIndicator.visibility = View.INVISIBLE
             drawFlightPath(plane.path)
+        })
+
+        mapViewModel.getFlightStateLiveData().observe(viewLifecycleOwner, Observer { plane ->
+
+            if (plane.states.isEmpty())
+            {
+                return@Observer
+            }
+
+            val etat: List<Any> = (plane.states[0] as List<Any>)
+
+            val title: String = etat[0] as String
+            val longitude: Double = etat[5] as Double
+            val latitude: Double = etat[6] as Double
+            val isGrounded: Boolean = etat[8] as Boolean
+            val speed: String = etat[9].toString()
+
+            val marker = Marker(osm)
+            marker.position = GeoPoint(latitude, longitude)
+
+            marker.title = "$title"
+            if (isGrounded) {
+                marker.snippet = "Grounded"
+            } else {
+                marker.snippet = "In Flight"
+            }
+
+            if (speed != null) {
+                marker.snippet = marker.snippet + "\nSpeed: $speed"
+            }
+            osm.overlays.add(marker)
         })
 
         return view

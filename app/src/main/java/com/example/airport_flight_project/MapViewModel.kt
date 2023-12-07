@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.google.gson.JsonParser
+import com.google.gson.JsonSyntaxException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -21,11 +22,11 @@ class MapViewModel : ViewModel(){
     private val _flight = MutableLiveData<FlightModel>()
     private val _travel = MutableLiveData<FlightTravelModel>()
     private val _dataPath = MutableLiveData<ArrayList<Pair<Double, Double>>>()
-    private val jsonContent = MutableLiveData<List<PlaneModel>>()
-    private val _plane = MutableLiveData<PlaneModel>()
+    private val jsonContent = MutableLiveData<List<StateModel>>()
+    private val _plane = MutableLiveData<StateModel>()
 
     fun setFlightLiveData(flight: FlightModel){
-         _flight.value = flight
+        _flight.value = flight
     }
     fun getFlightLiveData():LiveData<FlightModel>{
         return _flight
@@ -33,6 +34,10 @@ class MapViewModel : ViewModel(){
 
     fun getFlightTravelLiveData():LiveData<FlightTravelModel>{
         return _travel
+    }
+
+    fun getFlightStateLiveData():LiveData<StateModel>{
+        return _plane
     }
 
     fun setFlightDataPathLiveData(data: ArrayList<Pair<Double, Double>>){
@@ -56,18 +61,25 @@ class MapViewModel : ViewModel(){
                     val flightList = ArrayList<FlightModel>()
                     val parser = JsonParser()
                     val jsonElement = parser.parse(result)
-                    val data: FlightTravelModel =
-                        Gson().fromJson(jsonElement, FlightTravelModel::class.java)
-                    _travel.postValue(data)
-                    Log.i("Res", result)
-
+                    try{
+                        val data: FlightTravelModel =
+                            Gson().fromJson(jsonElement, FlightTravelModel::class.java)
+                        _travel.postValue(data)
+                        Log.i("Res", result)
+                    } catch (e: JsonSyntaxException) {
+                        Log.e("REQUEST", "Error during deserialization: ${e.localizedMessage}")
+                    }
                     requestPlanePosition(context)
                 } else {
                     Log.e("REQUEST", "ERROR NO RESULT")
                     val jsonFile = Utils.readJsonFromAssets(context = context, "flight.json")
-                    val data: FlightTravelModel =
-                        Gson().fromJson(jsonFile, FlightTravelModel::class.java)
-                    _travel.postValue(data)
+                    try{
+                        val data: FlightTravelModel =
+                            Gson().fromJson(jsonFile, FlightTravelModel::class.java)
+                        _travel.postValue(data)
+                    } catch (e: JsonSyntaxException) {
+                        Log.e("REQUEST", "Error during deserialization: ${e.localizedMessage}")
+                    }
                     // Afficher un Toast
                     withContext(Dispatchers.Main) {
                         Toast.makeText(context, "Une erreur s'est produite lors de la récupération des données voici le fichier de test", Toast.LENGTH_SHORT).show()
@@ -92,23 +104,30 @@ class MapViewModel : ViewModel(){
                 if (result != null) {
                     Log.i("REQUEST", result)
 
-                    val flightList = ArrayList<PlaneModel>()
+                    val flightList = ArrayList<StateModel>()
                     val parser = JsonParser()
                     val jsonElement = parser.parse(result)
 
-
-                    val data: Array<PlaneModel> =
-                        Gson().fromJson(jsonElement, Array<PlaneModel>::class.java)
-                    jsonContent.postValue(data.toList())
+                    try{
+                        val data: Array<StateModel> =
+                            Gson().fromJson(jsonElement, Array<StateModel>::class.java)
+                        jsonContent.postValue(data.toList())
+                    } catch (e: JsonSyntaxException) {
+                        Log.e("REQUEST", "Error during deserialization: ${e.localizedMessage}")
+                    }
                     Log.i("Res", result)
 
                 } else {
                     Log.e("REQUEST", "ERROR NO RESULT")
                     val jsonFile = Utils.readJsonFromAssets(context = context, "position.json")
 
-                    val data: PlaneModel =
-                        Gson().fromJson(jsonFile, PlaneModel::class.java)
-                    _plane.postValue(data)
+                    try {
+                        val data: StateModel = Gson().fromJson(jsonFile, StateModel::class.java)
+                        _plane.postValue(data)
+                    } catch (e: JsonSyntaxException) {
+                        Log.e("REQUEST", "Error during deserialization: ${e.localizedMessage}")
+                    }
+
 
                 }
             }
