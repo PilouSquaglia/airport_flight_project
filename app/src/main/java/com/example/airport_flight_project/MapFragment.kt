@@ -79,7 +79,7 @@ class MapFragment()  : Fragment() {
             val marker = Marker(osm)
             marker.position = GeoPoint(latitude, longitude)
 
-            marker.title = "$title"
+            marker.title = "Le vol : $title"
             if (isGrounded) {
                 marker.snippet = "Grounded"
             } else {
